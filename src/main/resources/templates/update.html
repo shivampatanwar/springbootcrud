@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Update</title>
+
+<style type="text/css">
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+form {
+	margin: 50px 80px;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	width: 250px;
+}
+
+input {
+	padding: 6px 10px;
+	border-radius: 5px;
+	border: none;
+	border: 1px solid black;
+}
+
+button {
+	padding: 6px 10px;
+	width: 100px;
+	background-color: teal;
+	border-radius: 5px;
+	border: none;
+	color: white;
+}
+</style>
+
+</head>
+<body>
+
+
+	<form action="update" method="post">
+		<input type="hidden" name="id"  required th:value="${student.id}" >
+		<input type="text" name="name"  required th:value="${student.name}">
+		<input type="tel" name="mobile" required th:value="${student.mobile}">
+		<input type="email" name="email"  required th:value="${student.email}">
+		<input type="number" name="physics" required th:value="${student.physics}">
+		<input type="number" name="chemistry" required th:value="${student.chemistry}">
+		<input type="number" name="mathematics" required th:value="${student.mathematics}">
+		<button>Update</button>
+	</form>
+
+
+
+
+</body>
+</html>
