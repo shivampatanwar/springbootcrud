@@ -12,7 +12,7 @@
 }
 
 form {
-	margin: 50px 80px;
+	margin: 20px 80px;
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
@@ -47,7 +47,6 @@ tr, td, th {
 }
 
 th, td {
-	border: 1px solid black;
 	padding: 5px;
 	font-family: sans-serif;
 	font-size: 14px;
@@ -79,6 +78,7 @@ h3 {
 	margin-left: 70px;
 	font-size: 19px;
 	font-family: sans-serif;
+	margin-top: 50px;
 }
 
 h2 {
@@ -86,10 +86,32 @@ h2 {
 	margin-left: 70px;
 	font-size: 19px;
 	font-family: sans-serif;
+	margin-top: 50px;
 }
 
 .tr td {
 	background-color: #F0F8EF;
+}
+
+.bt {
+	width: 190px;
+	padding: 6px 15px;
+}
+.bta {
+	width: 150px;
+	padding: 8px 15px;
+	margin: 0px 80px;
+	background-color: red;
+}
+
+.fm {
+	flex-direction: row;
+	width: auto;
+}
+
+.flex{
+	display: flex;
+	padding-top: 50px;
 }
 </style>
 
@@ -98,28 +120,86 @@ h2 {
 
 
 
-	<form action="save" method="post">
-		<input type="text" name="name" placeholder="Student Name" required>
-		<input type="tel" name="mobile" placeholder="Mobile" required>
-		<input type="email" name="email" placeholder="Email" required>
-		<input type="number" name="physics" placeholder="Physics Marks"
-			required> <input type="number" name="chemistry"
-			placeholder="Chemistry Marks" required> <input type="number"
-			name="mathematics" placeholder="Mathematics Marks" required>
-		<button>Save</button>
-	</form>
+	<div class="flex">
+
+		<div>
+			<form class="fm" action="findbyid" method="post">
+				<input type="number" name="id" placeholder="Enter Id Ex 1001" required>
+				<button class="bt">FIND BY ID</button>
+			</form>
+
+			<form class="fm" action="findbyemail" method="post">
+				<input type="email" name="email" placeholder="Enter Email" required>
+				<button class="bt">FIND BY EMAIL</button>
+			</form>
+
+			<form class="fm" action="findbymobile" method="post">
+				<input type="tel" name="mobile" placeholder="Enter Mobile" required>
+				<button class="bt">FIND BY MOBILE</button>
+			</form>
+
+			<form class="fm" action="findbyname" method="post">
+				<input type="text" name="name" placeholder="Enter Name" required>
+				<button class="bt">FIND BY NAME</button>
+			</form>
+			
+			<form class="fm" action="findbyphysics" method="post">
+				<input type="number" name="physics" placeholder="Enter Physics Mark" required>
+				<button class="bt">FIND BY PHYSICS</button>
+			</form>
+			
+			<form class="fm" action="findbychemistry" method="post">
+				<input type="number" name="chemistry" placeholder="Enter Chemistry Mark" required>
+				<button class="bt">FIND BY CHEMISTRY</button>
+			</form>
+			
+			<form class="fm" action="findbymathematics" method="post">
+				<input type="number" name="mathematics" placeholder="Enter Mathematics Mark" required>
+				<button class="bt">FIND BY METHEMATICS</button>
+			</form>
+			
+			<a href="/"><button class="bta">FIND ALL</button></a>
+
+		</div>
+		
+		<form action="save" method="post">
+			<input type="text" name="name" placeholder="Student Name" required>
+			<input type="tel" name="mobile" placeholder="Mobile" required>
+			<input type="email" name="email" placeholder="Email" required>
+			<input type="number" name="physics" placeholder="Physics Marks"
+				required> <input type="number" name="chemistry"
+				placeholder="Chemistry Marks" required> <input type="number"
+				name="mathematics" placeholder="Mathematics Marks" required>
+			<button>Save</button>
+		</form>
+		
+		
+		<form action="update" method="post" th:if="${abc}">
+			<input type="hidden" name="id"  required th:value="${student.id}" >
+			<input type="text" name="name"  required th:value="${student.name}">
+			<input type="tel" name="mobile" required th:value="${student.mobile}">
+			<input type="email" name="email"  required th:value="${student.email}">
+			<input type="number" name="physics" required th:value="${student.physics}">
+			<input type="number" name="chemistry" required th:value="${student.chemistry}">
+			<input type="number" name="mathematics" required th:value="${student.mathematics}">
+			<button>Update</button>
+		</form>
+
+	</div>
 
 	<h3 th:text="${success}"></h3>
 	<h2 th:text="${failure}"></h2>
 
 	<table>
 		<tr>
+			<th>ID</th>
 			<th>Student Name</th>
 			<th>Mobile</th>
 			<th>Email</th>
 			<th>Physics</th>
 			<th>Chemistry</th>
 			<th>Mathematics</th>
+			<th>Total</th>
 			<th>Edit</th>
 			<th>Delete</th>
 		</tr>
@@ -127,21 +207,25 @@ h2 {
 		<tbody>
 			<th:block th:each="user : ${users}">
 				<tr class="tr">
-					<td th:text="${user.name}">Shivam Patanwar</td>
-					<td th:text="${user.mobile}">9685430664</td>
-					<td th:text="${user.email}">shivampatanwar@gmail.com</td>
-					<td th:text="${user.physics}">80</td>
-					<td th:text="${user.chemistry}">70</td>
-					<td th:text="${user.mathematics}">90</td>
+					<td th:text="${user.id}"></td>
+					<td th:text="${user.name}"></td>
+					<td th:text="${user.mobile}"></td>
+					<td th:text="${user.email}"></td>
+					<td th:text="${user.physics}"></td>
+					<td th:text="${user.chemistry}"></td>
+					<td th:text="${user.mathematics}"></td>
+					<td
+						th:text="${#numbers.formatDecimal((user.physics + user.chemistry + user.mathematics)/3.0, 0, 'COMMA', 2, 'POINT')}"></td>
 					<td align="center"><a th:href="'update?id='+${user.id}"><button>Edit</button></a></td>
-					<td align="center"><a th:href="'delete?id='+${user.id}"><button class="d">Delete</button></a></td>
+					<td align="center"><a th:href="'delete?id='+${user.id}"><button
+								class="d">Delete</button></a></td>
 
 
 				</tr>
 			</th:block>
 
 
-	
+
 		</tbody>
 
 

@@ -9,13 +9,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Controller
 public class MyController {
 
 	@Autowired
 	StudentRepository repository;
-	
+
 	@GetMapping("/")
 	public String loadHome(ModelMap map) {
 		map.put("user", fetchAll(map));
@@ -30,29 +32,24 @@ public class MyController {
 
 	@PostMapping("/save")
 	public String save(Student student, ModelMap map) {
-		
 		repository.save(student);
-		
 		map.put("users", fetchAll(map));
 		map.put("success", student.getName() + " Record added Succesfully");
-		
 		return "home";
 	}
 
 	@GetMapping("/update")
 	public String update(int id, ModelMap map) {
-		
-		Student student=repository.findById(id).get();
+		Student student = repository.findById(id).get();
 		map.put("student", student);
-		return "update";
+		map.put("abc", student);
+		map.put("users", fetchAll(map));
+		return "home";
 	}
-	
-	
+
 	@PostMapping("/update")
 	public String updates(Student s, ModelMap map) {
-		
-		Student student=repository.findById(s.getId()).get();
-		
+		Student student = repository.findById(s.getId()).get();
 		student.setId(s.getId());
 		student.setName(s.getName());
 		student.setMobile(s.getMobile());
@@ -60,9 +57,7 @@ public class MyController {
 		student.setPhysics(s.getPhysics());
 		student.setChemistry(s.getChemistry());
 		student.setMathematics(s.getMathematics());
-		
 		repository.save(student);
-		
 		map.put("users", fetchAll(map));
 		map.put("success", student.getName() + " Record updated Succesfully");
 		return "home";
@@ -70,10 +65,108 @@ public class MyController {
 
 	@GetMapping("/delete")
 	public String delete(int id, ModelMap map) {
+		map.put("failure", repository.findById(id).get().getName() + " Record Deleted Succesfully");
 		repository.deleteById(id);
-		map.put("user", fetchAll(map));
-		map.put("success", "Record Deleted Succesfully");
+		map.put("users", fetchAll(map));
 		return "home";
 	}
+
+	// Find By Id
+	@PostMapping("/findbyid")
+	public String findbyid(int id, ModelMap map) {
+
+		try {
+			Student student = repository.findById(id).get();
+			map.put("users", student);
+		} catch (Exception e) {
+			map.put("failure", " Record Not Found");
+		}
+
+		return "home";
+	}
+
+	// Find By Email
+	@PostMapping("/findbyemail")
+	public String findbyemail(String email, ModelMap map) {
+
+		List<Student> student = repository.findByEmail(email);
+		if (student.isEmpty()) {
+			map.put("failure", " Record Not Found");
+		} else {
+			map.put("users", student);
+		}
+
+		return "home";
+	}
+
+	// Find By mobile
+	@PostMapping("/findbymobile")
+	public String findbymobile(long mobile, ModelMap map) {
+
+		List<Student> student = repository.findByMobile(mobile);
+		if (student.isEmpty()) {
+			map.put("failure", " Record Not Found");
+		} else {
+			map.put("users", student);
+		}
+
+		return "home";
+	}
+
+	// Find By mobile
+	@PostMapping("/findbyname")
+	public String findbyname(String name, ModelMap map) {
+
+		List<Student> student = repository.findByName(name);
+		if (student.isEmpty()) {
+			map.put("failure", " Record Not Found");
+		} else {
+			map.put("users", student);
+		}
+
+		return "home";
+	}
+
+	// Find By physics
+	@PostMapping("/findbyphysics")
+	public String findbyphysics(double physics, ModelMap map) {
+
+		List<Student> student = repository.findByPhysics(physics);
+		if (student.isEmpty()) {
+			map.put("failure", " Record Not Found");
+		} else {
+			map.put("users", student);
+		}
+
+		return "home";
+	}
+
+	// Find By Chemistry
+	@PostMapping("/findbychemistry")
+	public String findbychemistry(double chemistry, ModelMap map) {
+
+		List<Student> student = repository.findByChemistry(chemistry);
+		if (student.isEmpty()) {
+			map.put("failure", " Record Not Found");
+		} else {
+			map.put("users", student);
+		}
+
+		return "home";
+	}
+	
+	// Find By Chemistry
+		@PostMapping("/findbymathematics")
+		public String findbymathematics(double mathematics, ModelMap map) {
+
+			List<Student> student = repository.findByMathematics(mathematics);
+			if (student.isEmpty()) {
+				map.put("failure", " Record Not Found");
+			} else {
+				map.put("users", student);
+			}
+
+			return "home";
+		}
 
 }
