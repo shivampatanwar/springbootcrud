@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <title>Home</title>
@@ -158,11 +158,12 @@ h2 {
 				<button class="bt">FIND BY METHEMATICS</button>
 			</form>
 			
-			<a href="/"><button class="bta">FIND ALL</button></a>
+			<a href="/"><button class="bta">FIND ALL</button></a> <br><br>
+			<a href="save"><button class="bta">SAVE STUDENT</button></a>
 
 		</div>
 		
-		<form action="save" method="post">
+		<form action="save" method="post" th:if="${save}">
 			<input type="text" name="name" placeholder="Student Name" required>
 			<input type="tel" name="mobile" placeholder="Mobile" required>
 			<input type="email" name="email" placeholder="Email" required>
@@ -173,8 +174,8 @@ h2 {
 			<button>Save</button>
 		</form>
 		
-		
-		<form action="update" method="post" th:if="${abc}">
+		<!--  
+		<form action="update" method="post" th:if="${abc}" >
 			<input type="hidden" name="id"  required th:value="${student.id}" >
 			<input type="text" name="name"  required th:value="${student.name}">
 			<input type="tel" name="mobile" required th:value="${student.mobile}">
@@ -183,8 +184,19 @@ h2 {
 			<input type="number" name="chemistry" required th:value="${student.chemistry}">
 			<input type="number" name="mathematics" required th:value="${student.mathematics}">
 			<button>Update</button>
+		</form>  -->
+		
+		<form action="update" method="post" th:if="${abc}" th:object="${student}" >
+			<input type="hidden" name="id"  required th:field="*{id}" >
+			<input type="text" name="name"  required th:field="*{name}">
+			<input type="tel" name="mobile" required th:field="*{mobile}">
+			<input type="email" name="email"  required th:field="*{email}">
+			<input type="number" name="physics" required th:field="*{physics}">
+			<input type="number" name="chemistry" required th:field="*{chemistry}">
+			<input type="number" name="mathematics" required th:field="*{mathematics}">
+			<button>Update</button>
 		</form>
-
+		
 	</div>
 
 	<h3 th:text="${success}"></h3>
@@ -217,21 +229,12 @@ h2 {
 					<td
 						th:text="${#numbers.formatDecimal((user.physics + user.chemistry + user.mathematics)/3.0, 0, 'COMMA', 2, 'POINT')}"></td>
 					<td align="center"><a th:href="'update?id='+${user.id}"><button>Edit</button></a></td>
-					<td align="center"><a th:href="'delete?id='+${user.id}"><button
+					<td align="center"><a th:href="'/delete/'+${user.id}"><button
 								class="d">Delete</button></a></td>
-
-
 				</tr>
 			</th:block>
 
-
-
 		</tbody>
-
-
-
-
-
 	</table>
 
 

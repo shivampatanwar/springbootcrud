@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,6 +30,13 @@ public class MyController {
 		map.put("users", students);
 		return students;
 	}
+	
+	@GetMapping("/save")
+	public String save(ModelMap map) {
+		map.put("users", fetchAll(map));
+		map.put("save", "save");
+		return "home";
+	}
 
 	@PostMapping("/save")
 	public String save(Student student, ModelMap map) {
@@ -48,23 +56,15 @@ public class MyController {
 	}
 
 	@PostMapping("/update")
-	public String updates(Student s, ModelMap map) {
-		Student student = repository.findById(s.getId()).get();
-		student.setId(s.getId());
-		student.setName(s.getName());
-		student.setMobile(s.getMobile());
-		student.setEmail(s.getEmail());
-		student.setPhysics(s.getPhysics());
-		student.setChemistry(s.getChemistry());
-		student.setMathematics(s.getMathematics());
+	public String updates(Student student, ModelMap map) {
 		repository.save(student);
 		map.put("users", fetchAll(map));
 		map.put("success", student.getName() + " Record updated Succesfully");
 		return "home";
 	}
 
-	@GetMapping("/delete")
-	public String delete(int id, ModelMap map) {
+	@GetMapping("/delete/{id}")
+	public String delete(@PathVariable int id, ModelMap map) {
 		map.put("failure", repository.findById(id).get().getName() + " Record Deleted Succesfully");
 		repository.deleteById(id);
 		map.put("users", fetchAll(map));
